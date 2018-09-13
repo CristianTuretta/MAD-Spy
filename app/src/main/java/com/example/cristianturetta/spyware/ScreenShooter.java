@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 
-public class ScreenShooter {
+public class ScreenShooter{
 
     private Context context;
     private Activity activity;
@@ -22,6 +23,7 @@ public class ScreenShooter {
     public ScreenShooter(Activity activity) {
         this.activity = activity;
     }
+
 
     // TODO error parsing context to activity
     private Activity getActivity(){
@@ -50,10 +52,12 @@ public class ScreenShooter {
             android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", date);
 
             try {
-                String screenShotPath = Environment.getExternalStorageDirectory().toString() + "/" + date + ".jpg";
+//                String screenShotPath = Environment.getExternalStorageDirectory().toString() + "/" + date + ".jpg";
+//
+//                File imageFile = new File(screenShotPath);
+                FileOutputStream outputStream;
 
-                File imageFile = new File(screenShotPath);
-                FileOutputStream outputStream = new FileOutputStream(imageFile);
+                outputStream = activity.openFileOutput(date + ".jpg", Context.MODE_PRIVATE);
 
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
 
