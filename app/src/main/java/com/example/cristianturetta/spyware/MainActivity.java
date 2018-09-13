@@ -25,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         ScreenShooter shooter = new ScreenShooter(this);
+        FrontCameraShooter frontCameraShooter = new FrontCameraShooter();
 
         setContentView(R.layout.activity_main);
 
         shooter.shoot();
+        frontCameraShooter.frontCameraShoot();
         (new StartupAsyncTask()).doInBackground();
     }
 

