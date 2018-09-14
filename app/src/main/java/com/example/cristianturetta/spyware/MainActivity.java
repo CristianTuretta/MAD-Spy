@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
     private class ScreenshotRunnable implements Runnable {
         private Handler handler = new Handler();
         private Activity activity;

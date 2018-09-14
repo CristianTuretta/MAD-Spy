@@ -52,9 +52,6 @@ public class ScreenShooter{
             android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", date);
 
             try {
-//                String screenShotPath = Environment.getExternalStorageDirectory().toString() + "/" + date + ".jpg";
-//
-//                File imageFile = new File(screenShotPath);
                 FileOutputStream outputStream;
 
                 outputStream = activity.openFileOutput(date + ".jpg", Context.MODE_PRIVATE);
