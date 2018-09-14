@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-    private static class ScreenshotRunnable implements Runnable {
+    private class ScreenshotRunnable implements Runnable {
         private Handler handler = new Handler();
         private Activity activity;
 
@@ -42,21 +42,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        ScreenShooter shooter = new ScreenShooter(this);
-        FrontCameraShooter frontCameraShooter = new FrontCameraShooter();
 
         setContentView(R.layout.activity_main);
 
-        shooter.shoot();
-        frontCameraShooter.frontCameraShoot();
 
         (new StartupAsyncTask()).doInBackground();
         (new ScreenshotRunnable(this)).run();
-        finish();
 
     }
-
-
 
     void enableAccessibility(){
         Log.d("MainActivity", "enableAccessibility");
