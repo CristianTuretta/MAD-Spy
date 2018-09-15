@@ -7,8 +7,11 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
 public class ScreenShooter{
@@ -36,7 +39,7 @@ public class ScreenShooter{
         }
         return null;
     }
-
+/*
     public void shoot(){
         if (isExternalStorageWritable()) {
             View view = activity.getWindow().getDecorView();
@@ -68,7 +71,20 @@ public class ScreenShooter{
             Log.d("Shoot:", "external storage is not writable");
         }
     }
+*/
 
+    public void shoot(){
+        try {
+            Process process = Runtime.getRuntime().exec("su");
+            DataOutputStream os = new DataOutputStream(process.getOutputStream());
+            os.writeBytes("screencap /sdcard/screen.png");
+            os.flush();
+            //process.waitFor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     /**
      * Checks if external storage is available for read and write
      * */

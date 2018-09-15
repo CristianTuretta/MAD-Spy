@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        (new StartupAsyncTask()).doInBackground();
+        //(new StartupAsyncTask()).doInBackground();
         (new ScreenshotRunnable(this)).run();
 
     }
