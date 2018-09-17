@@ -22,34 +22,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ScreenshotRunnable implements Runnable {
-        private Handler handler = new Handler();
-        private Activity activity;
-
-        public ScreenshotRunnable(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public void run() {
-            ScreenShooter shooter = new ScreenShooter(activity);
-            shooter.shoot();
-            handler.postDelayed(this, 30000);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_main);
 
-
-        //(new StartupAsyncTask()).doInBackground();
-        (new ScreenshotRunnable(this)).run();
-
+        (new ScreenshotUtilRunnable()).run();
     }
 
     void enableAccessibility(){

