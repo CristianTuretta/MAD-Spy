@@ -10,6 +10,7 @@ public class FirebaseConfig {
     private static final String projectId = "mads-50eb5";
     private static final String storageBucket = "mads-50eb5.appspot.com";
     private static final String messagingSenderId = "834670029342";
+    private static final String googleApi = "https://www.googleapis.com/upload/storage/v1/b/";
 
     public static String getApiKey() {
         return apiKey;
@@ -33,5 +34,9 @@ public class FirebaseConfig {
 
     public static String getMessagingSenderId() {
         return messagingSenderId;
+    }
+
+    public static String getGoogleApi() {
+        return googleApi;
     }
 }

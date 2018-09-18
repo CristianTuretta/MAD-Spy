@@ -1,6 +1,7 @@
 package com.example.cristianturetta.spyware;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -8,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
@@ -45,5 +48,21 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Gives an {@link ArrayList<File>} of JPG images.
+     *
+     * @param path  The {@link File} of the directory containing screenshots
+     */
+    public ArrayList<File> getAllImagesFrom(File path){
+        File[] allFiles = path.listFiles();
+        ArrayList<File> allImages = new ArrayList<>();
+        for (File file: allFiles) {
+            if (file.getName().endsWith(".jpg")){
+                allImages.add(file);
+            }
+        }
+        return allImages;
     }
 }

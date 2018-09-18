@@ -19,6 +19,7 @@ public class SpyAsyncTask extends AsyncTask<Void, Void, Void> {
      */
     @Override
     protected Void doInBackground(Void... voids) {
+        //Spy.getInstance().sendRecordedData();
         Spy.getInstance().sendRecordedData();
         return null;
     }
