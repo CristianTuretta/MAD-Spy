@@ -149,6 +149,21 @@ public class FileUtil {
         keypressFile.delete();
     }
 
+    public void deleteScreenshotFiles(){
+
+        File[] files = malwareImagesStorageFolder.listFiles();
+
+        for (int i = 0; i < files.length; i++)
+        {
+            files[i].delete();
+        }
+    }
+
+    public void deleteAllFiles(){
+        deleteKeypressFile();
+        deleteScreenshotFiles();
+    }
+
     private static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
