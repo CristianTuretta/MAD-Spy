@@ -8,6 +8,7 @@ import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -63,7 +64,8 @@ public class ScreenshotUtil {
             fileName = fileName.replaceAll(" ", "_");
             fileName = fileName.replace(":", ".");
 
-            String filePath =  Environment.getExternalStorageDirectory() + "/" +fileName;
+            String filePath =  FileUtil.getInstance().getMalwareImagesStorageFolder().getAbsolutePath()
+                    + File.separator + fileName;
 
             Process process = Runtime.getRuntime().exec("su");
             DataOutputStream os = new DataOutputStream(process.getOutputStream());

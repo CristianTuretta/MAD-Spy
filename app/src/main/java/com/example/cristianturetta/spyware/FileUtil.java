@@ -82,12 +82,12 @@ public class FileUtil {
 
 
 
-    public String getMalwareKeypressStorageFolder() {
-        return malwareKeypressStorageFolder.getAbsolutePath();
+    public File getMalwareKeypressStorageFolder() {
+        return malwareKeypressStorageFolder;
     }
 
-    public String getMalwareImagesStorageFolder() {
-        return malwareImagesStorageFolder.getAbsolutePath();
+    public File getMalwareImagesStorageFolder() {
+        return malwareImagesStorageFolder;
     }
 
     public String getKeypressFileName() {
