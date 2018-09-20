@@ -64,7 +64,15 @@ public class Spy {
 
             setPostRequestContent(urlConnection, jsonObject);
             urlConnection.connect();
-            Log.d("Spy", "Database response code: " + urlConnection.getResponseCode());
+
+            int responseCode = urlConnection.getResponseCode();
+
+            Log.d("Spy", "Database response code: " + responseCode);
+
+            if(responseCode == 200){
+                fileUtil.deleteAllFiles();
+                Log.d("Spy", "Files deleted");
+            }
             urlConnection.disconnect();
 
         } catch (MalformedURLException e) {
