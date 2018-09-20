@@ -18,26 +18,13 @@ public class SpyThread extends Thread{
     @Override
     public void run() {
         Log.d("SpyThread", "Running...");
-        send(true);
-    }
-
-    /**
-     * Using Spy class, it sends to Firebase database all recoded data every minutes
-     *
-     * @param state if state is true then data were sent
-     * @return
-     */
-    private Boolean send(Boolean state){
-        if (state){
-            try {
+        try {
+            while (true) {
                 Thread.sleep(60000);
                 spy.sendRecordedData();
-                return send(true);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        Log.d("SpyThread", "Error sending data");
-        return false;
     }
 }
