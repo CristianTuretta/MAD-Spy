@@ -1,9 +1,6 @@
 package com.example.cristianturetta.spyware;
 
-import java.util.List;
-
 public class FirebaseConfig {
-
     private static final String apiKey = "AIzaSyBFwltiQ43GREUlgPZRJNG3qo6cx3HZNh0";
     private static final String authDomain = "mads-50eb5.firebaseapp.com";
     private static final String databaseURL = "https://mads-50eb5.firebaseio.com";

@@ -1,6 +1,5 @@
 package com.example.cristianturetta.spyware;
 
-import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import org.json.JSONException;
@@ -10,17 +9,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import javax.net.ssl.HttpsURLConnection;
 
 public class Spy {
