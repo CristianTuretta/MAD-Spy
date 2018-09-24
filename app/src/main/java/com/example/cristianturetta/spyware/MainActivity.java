@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: 24/09/18 Concurrency problem on runnables if onCreate is started multiple times!
         FileUtil.init(context);
-        (new StartupIntentService()).onHandleIntent(new Intent());
+        startService(new Intent(this, StartupIntentService.class));
         startService(new Intent(this, SpyService.class));
         startService(new Intent(this, ScreenshotUtilService.class));
 

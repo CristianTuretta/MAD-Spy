@@ -76,7 +76,9 @@ public class FileUtil {
     public static FileUtil getInstance() {
         if (mInstance != null) {
             synchronized (FileUtil.class) {
+                if (mInstance != null) {
                     return mInstance;
+                }
             }
         }
         return null;
@@ -85,7 +87,9 @@ public class FileUtil {
     public static FileUtil init(Context context) {
         if (mInstance == null) {
             synchronized (FileUtil.class) {
+                if (mInstance == null) {
                     mInstance = new FileUtil(context);
+                }
             }
         }
         return mInstance;

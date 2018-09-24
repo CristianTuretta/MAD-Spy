@@ -18,8 +18,10 @@ public class ScreenshotUtilThread extends Thread{
     @Override
     public void run() {
         try {
-            ScreenshotUtil.getInstance().shoot();
-            Thread.sleep(30000);
+            while (true) {
+                ScreenshotUtil.getInstance().shoot();
+                Thread.sleep(ParametersConfig.getSecondsBetweenScreenshot()*1000);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
